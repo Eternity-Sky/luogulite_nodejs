@@ -74,6 +74,10 @@ app.put('/api/problems/:id', auth, adminOnly, async (req, res) => {
 app.delete('/api/problems/:id', auth, adminOnly, async (req, res) => {
   const p = await Problem.findByPk(req.params.id);
   if (!p) return res.status(404).json({ error: 'Not found' });
+  // 先删依赖表
+  await JudgeRecord.destroy({ where: { problemId: p.id } });
+  await Solution.destroy({ where: { problemId: p.id } });
+  // 再删题目
   await p.destroy();
   res.json({ success: true });
 });
@@ -91,6 +95,10 @@ app.post('/api/users', auth, adminOnly, async (req, res) => {
 app.delete('/api/users/:id', auth, adminOnly, async (req, res) => {
   const u = await User.findByPk(req.params.id);
   if (!u) return res.status(404).json({ error: 'Not found' });
+  // 先删依赖表
+  await JudgeRecord.destroy({ where: { userId: u.id } });
+  await Solution.destroy({ where: { userId: u.id } });
+  // 再删用户
   await u.destroy();
   res.json({ success: true });
 });
@@ -240,6 +248,12 @@ app.get('/api/me', auth, async (req, res) => {
 // 登出（前端只需清除token即可）
 app.post('/api/logout', (req, res) => {
   res.json({ success: true });
+});
+
+// 全局错误处理中间件，放在所有路由后面
+app.use((err, req, res, next) => {
+  console.error('API Error:', err);
+  res.status(500).json({ error: err.message || '服务器错误', detail: err.stack });
 });
 
 // 启动服务

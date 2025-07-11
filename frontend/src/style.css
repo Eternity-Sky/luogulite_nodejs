@@ -1,79 +1,117 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* 全局字体和背景 */
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Arial', sans-serif;
+  background: #f4f7fa;
+  color: #222;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* 主色调（蓝色） */
+:root {
+  --main-color: #2185d0;
+  --main-color-hover: #1678c2;
+  --card-bg: #fff;
+  --card-radius: 12px;
+  --card-shadow: 0 2px 16px 0 rgba(33,133,208,0.08);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+/* 卡片化内容区 */
+.ui.container, .ui.segment, .ui.card, .ui.message {
+  background: var(--card-bg) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 2em;
+}
+
+/* 按钮美化 */
+.ui.button, .ui.primary.button {
+  border-radius: 6px !important;
+  background: var(--main-color) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px 0 rgba(33,133,208,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.ui.button:hover, .ui.primary.button:hover {
+  background: var(--main-color-hover) !important;
+  box-shadow: 0 4px 16px 0 rgba(33,133,208,0.16);
+}
+
+/* 标签美化 */
+.ui.label {
+  border-radius: 4px !important;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  padding: 0.4em 1em !important;
+  background: #eaf3fb !important;
+  color: var(--main-color) !important;
 }
-button:hover {
-  border-color: #646cff;
+.ui.label.green {
+  background: #e6f9ed !important;
+  color: #21ba45 !important;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
+.ui.label.red {
+  background: #ffeaea !important;
+  color: #db2828 !important;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Tab菜单美化 */
+.ui.tabular.menu .item {
+  border-radius: 6px 6px 0 0 !important;
+  font-weight: 500;
+  color: var(--main-color) !important;
+  background: #eaf3fb !important;
+  margin-right: 2px !important;
+  transition: background 0.2s, color 0.2s;
+}
+.ui.tabular.menu .item.active {
+  background: var(--main-color) !important;
+  color: #fff !important;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* 表格美化 */
+.ui.table {
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow);
+  background: #fff !important;
+  overflow: hidden;
+}
+.ui.table th, .ui.table td {
+  padding: 0.8em 1em !important;
+}
+
+/* Loading美化 */
+.ui.dimmer {
+  background: rgba(33,133,208,0.08) !important;
+}
+
+/* 空状态美化 */
+.ui.message {
+  background: #f8fafc !important;
+  color: #888 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 响应式优化 */
+@media (max-width: 600px) {
+  .ui.container, .ui.segment, .ui.card {
+    padding: 1em !important;
+    margin: 0.5em !important;
   }
-  a:hover {
-    color: #747bff;
+  .ui.table th, .ui.table td {
+    padding: 0.5em 0.5em !important;
+    font-size: 0.95em;
   }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+/* 头像圆形背景（如有） */
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--main-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
 }

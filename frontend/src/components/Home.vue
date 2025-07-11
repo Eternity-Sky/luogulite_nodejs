@@ -8,6 +8,9 @@
       <div v-if="user && user.isAdmin" style="margin-bottom:1em;">
         <router-link to="/admin" class="ui blue button">后台管理</router-link>
       </div>
+      <div v-if="user" style="margin-bottom:1em;">
+        <button class="ui button primary" @click="goMyProfile">我的主页</button>
+      </div>
       <div class="ui segment" v-if="announcements.length">
         <h3 class="ui header">公告</h3>
         <div class="ui feed">
@@ -35,13 +38,15 @@ import axios from 'axios';
 import MarkdownIt from 'markdown-it';
 import mk from 'markdown-it-katex';
 import 'katex/dist/katex.min.css';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const md = MarkdownIt({ html: true, linkify: true, typographer: true }).use(mk);
 function renderMd(text) {
   return md.render(text || '');
 }
 const announcements = ref([]);
 const loading = ref(true);
-const user = ref(JSON.parse(localStorage.getItem('user') || 'null'));
+const user = ref(null);
 const newTitle = ref('');
 const newContent = ref('');
 async function fetchAnnouncements() {
@@ -64,4 +69,11 @@ async function deleteAnnouncement(id) {
   fetchAnnouncements();
 }
 onMounted(fetchAnnouncements);
+onMounted(() => {
+  const u = localStorage.getItem('user');
+  if (u) user.value = JSON.parse(u);
+});
+function goMyProfile() {
+  if (user.value) router.push(`/users/${user.value.id}`);
+}
 </script> 

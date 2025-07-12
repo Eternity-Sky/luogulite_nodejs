@@ -95,7 +95,7 @@ body {
   .ui.container, .ui.segment, .ui.card {
     padding: 1em !important;
     margin: 0.5em !important;
-  }
+}
   .ui.table th, .ui.table td {
     padding: 0.5em 0.5em !important;
     font-size: 0.95em;

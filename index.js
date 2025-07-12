@@ -18,7 +18,13 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST || 'localhost',
     dialect: 'mysql',
-    logging: false
+    logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
   }
 );
 
@@ -37,6 +43,31 @@ JudgeRecord.belongsTo(Problem, { foreignKey: 'problemId' });
 Solution.belongsTo(User, { foreignKey: 'userId' });
 Solution.belongsTo(Problem, { foreignKey: 'problemId' });
 Announcement.belongsTo(User, { foreignKey: 'userId' });
+
+// 数据库连接初始化
+let dbInitialized = false;
+async function initializeDatabase() {
+  if (dbInitialized) return;
+  try {
+    await sequelize.authenticate();
+    console.log('数据库连接成功');
+    await sequelize.sync({ alter: true });
+    dbInitialized = true;
+  } catch (err) {
+    console.error('数据库连接失败:', err);
+    throw err;
+  }
+}
+
+// 确保数据库连接的中间件
+app.use(async (req, res, next) => {
+  try {
+    await initializeDatabase();
+    next();
+  } catch (err) {
+    res.status(500).json({ error: '数据库连接失败' });
+  }
+});
 
 // API 路由示例
 app.get('/api/problems', async (req, res) => {
@@ -256,17 +287,5 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message || '服务器错误', detail: err.stack });
 });
 
-// 启动服务
-const PORT = process.env.PORT || 3000;
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('数据库连接成功');
-    await sequelize.sync({ alter: true }); // 自动同步表结构，完成后可注释
-    app.listen(PORT, () => {
-      console.log(`服务已启动: http://localhost:${PORT}`);
-    });
-  } catch (err) {
-    console.error('数据库连接失败:', err);
-  }
-})(); 
+// 导出app供Vercel使用
+module.exports = app; 
